@@ -1,5 +1,5 @@
 import { JitsiMeeting } from "@jitsi/react-sdk";
-import React, { useEffect } from "react";
+import React from "react";
 
 const JitsiMeetRoom2: React.FC<{ roomName: string }> = ({ roomName }) => {
   return (
@@ -26,7 +26,7 @@ const JitsiMeetRoom2: React.FC<{ roomName: string }> = ({ roomName }) => {
         displayName: "Rohan Gupta",
         email: "rohan.gupta@zopper.com",
       }}
-      onApiReady={(externalApi) => {
+      onApiReady={(_) => {
         // here you can attach custom event listeners to the Jitsi Meet External API
         // you can also store it locally to execute commands
         // externalApi.

@@ -1,8 +1,8 @@
-import { useHMSActions } from "@100mslive/react-sdk";
+// import { useHMSActions } from "@100mslive/react-sdk";
 import React, { useState } from "react";
 
 const JoinRoom = () => {
-  const hmsActions = useHMSActions();
+  // const hmsActions = useHMSActions();
 
   const [inputValues, setInputValues] = useState({
     name: "",
@@ -16,27 +16,27 @@ const JoinRoom = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(e);
-    // const { name = "", token = "" } = inputValues;
-    // const {} = e.target.e
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   console.log(e);
+  //   // const { name = "", token = "" } = inputValues;
+  //   // const {} = e.target.e
 
-    const token = "";
-    const name = "";
+  //   const token = "";
+  //   const name = "";
 
-    const authToken = await hmsActions.getAuthTokenByRoomCode({
-      roomCode: token,
-    });
+  //   const authToken = await hmsActions.getAuthTokenByRoomCode({
+  //     roomCode: token,
+  //   });
 
-    try {
-      await hmsActions.join({
-        userName: name,
-        authToken: authToken,
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  //   try {
+  //     await hmsActions.join({
+  //       userName: name,
+  //       authToken: authToken,
+  //     });
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   return (
     <div>

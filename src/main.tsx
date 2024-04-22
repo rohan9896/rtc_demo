@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 // import App from './App.tsx'
 import "./index.css";
-import { App, App2 } from "./App";
+// import { App, App2 } from "./App";
 import { HMSRoomProvider } from "@100mslive/react-sdk";
 import Jitsi from "./Jitsi";
 
