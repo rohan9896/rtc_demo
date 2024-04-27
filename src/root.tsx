@@ -29,31 +29,32 @@ const Root = () => {
         },
         // audio: true,
       });
-      // .then(async (displayMediaStream) => {
-      //   const [screenVideoTrack] = displayMediaStream.getVideoTracks();
-      //   const externalAudioSteam = await navigator.mediaDevices
-      //     .getUserMedia({ audio: true })
-      //     .catch((e) => {
-      //       throw e;
-      //     });
-      //   const [externalAudioTrack] = externalAudioSteam.getAudioTracks();
-
-      //   stream = new MediaStream([screenVideoTrack, externalAudioTrack]);
-      // });
 
       const externalAudioSteam = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
 
-      // screenVideoStream.addTrack(externalAudioSteam.getAudioTracks()[0]);
+      // const videoStream = screenVideoStream.clone();
+      // videoStream.addTrack(externalAudioSteam.getAudioTracks()[0]);
 
-      const videoStream = screenVideoStream.clone();
-      videoStream.addTrack(externalAudioSteam.getAudioTracks()[0]);
+      const mergedStream = new MediaStream();
 
-      if (videoStream) {
-        setStream(videoStream);
+      screenVideoStream.getAudioTracks().forEach((track) => {
+        mergedStream.addTrack(track);
+      });
+
+      screenVideoStream.getVideoTracks().forEach((track) => {
+        mergedStream.addTrack(track);
+      });
+
+      externalAudioSteam.getAudioTracks().forEach((track) => {
+        mergedStream.addTrack(track.clone());
+      });
+
+      if (mergedStream) {
+        setStream(mergedStream);
       }
-      recorderRef.current = new RecordRTC(videoStream, {
+      recorderRef.current = new RecordRTC(mergedStream, {
         type: "video",
         timeSlice: 1000,
         ondataavailable: (blob) => {
