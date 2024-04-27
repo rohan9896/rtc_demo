@@ -1,5 +1,4 @@
-import { Box, Button, Flex, IconButton, Input } from "@chakra-ui/react";
-import Jitsi from "./Jitsi";
+import { Box, Button, Flex, IconButton } from "@chakra-ui/react";
 import { DownloadIcon } from "@chakra-ui/icons";
 import JitsiMeetRoom2 from "./JitsiMeetRoom2";
 import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
