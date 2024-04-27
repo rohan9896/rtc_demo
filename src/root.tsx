@@ -1,10 +1,12 @@
-import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
-import JitsiMeetRoom2 from "./JitsiMeetRoom2";
-import { useEffect, useRef, useState } from "react";
-import { Button, Flex, IconButton } from "@chakra-ui/react";
+import { Box, Button, Flex, IconButton, Input } from "@chakra-ui/react";
+import Jitsi from "./Jitsi";
 import { DownloadIcon } from "@chakra-ui/icons";
+import JitsiMeetRoom2 from "./JitsiMeetRoom2";
+import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
+import { useEffect, useRef, useState } from "react";
+import SideForm from "./components/SideForm";
 
-const Jitsi = () => {
+const Root = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<any>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
@@ -88,7 +90,7 @@ const Jitsi = () => {
 
   return (
     <>
-      {/* <div
+      <div
         style={{
           display: "flex",
           alignItems: "center",
@@ -115,35 +117,15 @@ const Jitsi = () => {
             onClick={handleSave}
           />
         </Flex>
-      </div> */}
-      <div style={{ height: "85vh", width: "100%" }}>
-        {/* <JitsiMeetRoom roomName="exampleRoom" /> */}
-        <JitsiMeetRoom2 roomName="RohanGuptaRoom" />
-        {/* <JitsiMeeting
-        // domain={"https://localhost:8443"}
-        roomName="PleaseUseAGoodRoomName"
-        configOverwrite={{
-          startWithAudioMuted: true,
-          disableModeratorIndicator: true,
-          startScreenSharing: true,
-          enableEmailInStats: false,
-        }}
-        interfaceConfigOverwrite={{
-          DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-        }}
-        userInfo={{
-          displayName: "rohan_gupta",
-          email: "rohan.gupta@zopper.com",
-        }}
-        onApiReady={(externalApi) => {
-          // here you can attach custom event listeners to the Jitsi Meet External API
-          // you can also store it locally to execute commands
-        }}
-        getIFrameRef={(iframeRef) => {
-          iframeRef.style.height = "400px";
-        }}
-      /> */}
       </div>
+      <Flex>
+        <Box flexBasis="40%">
+          <SideForm />
+        </Box>
+        <Box flexBasis="60%">
+          <JitsiMeetRoom2 roomName="RohanGuptaRoom" />
+        </Box>
+      </Flex>
       {blob && (
         <video
           src={URL.createObjectURL(blob)}
@@ -157,4 +139,4 @@ const Jitsi = () => {
   );
 };
 
-export default Jitsi;
+export default Root;
