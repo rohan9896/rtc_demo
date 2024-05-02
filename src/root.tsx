@@ -5,6 +5,30 @@ import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
 import { useEffect, useRef, useState } from "react";
 import SideForm from "./components/SideForm";
 
+const mergeAudioStreams = (
+  desktopStream: MediaStream,
+  voiceStream: MediaStream
+) => {
+  const context = new AudioContext();
+
+  // Create a couple of sources
+  const source1 = context.createMediaStreamSource(desktopStream);
+  const source2 = context.createMediaStreamSource(voiceStream);
+  const destination = context.createMediaStreamDestination();
+
+  const desktopGain = context.createGain();
+  const voiceGain = context.createGain();
+
+  desktopGain.gain.value = 0.7;
+  voiceGain.gain.value = 0.7;
+
+  source1.connect(desktopGain).connect(destination);
+  // Connect source2
+  source2.connect(voiceGain).connect(destination);
+
+  return destination.stream.getAudioTracks();
+};
+
 const Root = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<any>(null);
@@ -31,32 +55,52 @@ const Root = () => {
       });
 
       const externalAudioSteam = await navigator.mediaDevices.getUserMedia({
-        audio: true,
+        // audio: true,
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+        },
       });
 
       // const videoStream = screenVideoStream.clone();
       // videoStream.addTrack(externalAudioSteam.getAudioTracks()[0]);
 
-      const mergedStream = new MediaStream();
+      // const mergedStream = new MediaStream();
 
-      screenVideoStream.getAudioTracks().forEach((track) => {
-        mergedStream.addTrack(track);
-      });
+      // console.log({ mergedStream });
 
-      screenVideoStream.getVideoTracks().forEach((track) => {
-        mergedStream.addTrack(track);
-      });
+      // screenVideoStream.getAudioTracks().forEach((track) => {
+      //   mergedStream.addTrack(track);
+      // });
 
-      externalAudioSteam.getAudioTracks().forEach((track) => {
-        mergedStream.addTrack(track.clone());
-      });
+      // screenVideoStream.getVideoTracks().forEach((track) => {
+      //   mergedStream.addTrack(track);
+      // });
+
+      // externalAudioSteam.getAudioTracks().forEach((track) => {
+      //   mergedStream.addTrack(track.clone());
+      // });
+
+      const mergedAudioStream = mergeAudioStreams(
+        screenVideoStream,
+        externalAudioSteam
+      );
+
+      const tracks = [
+        ...screenVideoStream.getVideoTracks(),
+        ...mergedAudioStream,
+      ];
+
+      console.log("Tracks to add to stream", tracks);
+      const mergedStream = new MediaStream(tracks);
 
       if (mergedStream) {
         setStream(mergedStream);
       }
       recorderRef.current = new RecordRTC(mergedStream, {
         type: "video",
-        timeSlice: 1000,
+        numberOfAudioChannels: 2,
+        timeSlice: 3000,
         ondataavailable: (blob) => {
           // send this blob to backend
           console.log({ blob }, "swdefreds");
